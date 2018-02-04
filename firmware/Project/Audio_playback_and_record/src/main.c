@@ -20,7 +20,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "usart.h"
+#include <stdio.h>
 /** @addtogroup STM32F4-Discovery_Audio_Player_Recorder
   * @{
   */ 
@@ -64,7 +65,11 @@ int main(void)
   
   /* Configure TIM4 Peripheral to manage LEDs lighting */
   TIM_LED_Config();
-  
+  // InitFifo();
+  USART_Config();
+
+  USART_write_byte('A');
+  printf("hellloe\n");
   /* Initialize the repeat status */
   RepeatState = 0;
   LED_Toggle = 7;

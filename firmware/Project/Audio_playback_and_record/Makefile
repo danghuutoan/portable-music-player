@@ -35,11 +35,14 @@ SRC+= src/main.c
 SRC+= src/stm32f4xx_it.c
 SRC+= src/usb_bsp.c
 SRC+= src/usbh_usr.c
-
+SRC+= src/usart.c
+# SRC+= src/fifo.c
+# SRC+= src/printf-stdarg.c
 SRC+= src/waveplayer.c
 SRC+= src/waverecorder.c
 
 SRC+= $(PERIPH_DRIVER)/src/misc.c
+SRC+= $(PERIPH_DRIVER)/src/stm32f4xx_usart.c
 SRC+= $(PERIPH_DRIVER)/src/stm32f4xx_gpio.c
 SRC+= $(PERIPH_DRIVER)/src/stm32f4xx_rcc.c
 SRC+= $(PERIPH_DRIVER)/src/stm32f4xx_syscfg.c
@@ -90,6 +93,7 @@ OBJECTS = $(addprefix $(OUTPUT)/, $(OBJS))
 CFLAGS+=$(INCLUDE)
 CFLAGS+=$(DEFINE)
 CFLAGS+=-g
+CFLAGS+=-fno-builtin
 CFLAGS+=-mcpu=cortex-m4 -mthumb
 CFLAGS+=-MD
 LDFLAGS+= -L $(LIBRARY)/Utilities/STM32F4-Discovery/
@@ -97,7 +101,9 @@ LDFLAGS+= -lPDMFilter_GCC
 LDFLAGS+=$(LINKER)
 LDFLAGS+=$(CFLAGS)
 LDFLAGS+=-lc
-LDFLAGS+=-lrdimon
+# LDFLAGS+=-lrdimon
+LDFLAGS+=--specs=nano.specs
+LDFLAGS+=--specs=nosys.specs
 ASFLAGS+=-g
 ASFLAGS+=-mcpu=cortex-m4 -mthumb
 $(OUTPUT)/%.o: %.s Makefile
