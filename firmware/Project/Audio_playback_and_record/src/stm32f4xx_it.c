@@ -179,12 +179,12 @@ void EXTI1_IRQHandler(void)
   {
     if( Count==1)
     {
-      PauseResumeStatus = 1;
+      // PauseResumeStatus = 1;
       Count = 0;
     }
     else
     {
-      PauseResumeStatus = 0;
+      // PauseResumeStatus = 0;
       Count = 1;
     }
     /* Clear the EXTI line 1 pending bit */
