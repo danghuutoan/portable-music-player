@@ -16,7 +16,7 @@ DEF+=USE_USB_OTG_FS
 DEF+=MEDIA_USB_KEY
 DEF+=__FPU_PRESENT=0
 # DEF+=MEDIA_IntFLASH
-LIBRARY= /Users/mac/Downloads/STM32F4-Discovery_FW_V1.1.0/
+LIBRARY= /Users/mac/git/portable-music-player/firmware/
 
 PERIPH_DRIVER= $(LIBRARY)/Libraries/STM32F4xx_StdPeriph_Driver
 USB_OTG_DRIVER= $(LIBRARY)/Libraries/STM32_USB_OTG_Driver
