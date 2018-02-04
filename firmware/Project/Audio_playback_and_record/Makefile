@@ -10,12 +10,9 @@ OD      = $(COMPILER)objdump
 DEF+=STM32F4XX
 # DEF+=USE_FULL_ASSERT
 DEF+=USE_STDPERIPH_DRIVER
-# DEF+=USB_OTG_HS_CORE
-# DEF+=USE_ULPI_PHY
 DEF+=USE_USB_OTG_FS
 DEF+=MEDIA_USB_KEY
 DEF+=__FPU_PRESENT=0
-# DEF+=MEDIA_IntFLASH
 LIBRARY= /Users/mac/git/portable-music-player/firmware/
 
 PERIPH_DRIVER= $(LIBRARY)/Libraries/STM32F4xx_StdPeriph_Driver
@@ -36,7 +33,6 @@ INC+= $(USB_HOST_LIBRARY)/Class/MSC/inc
 SRC+= src/system_stm32f4xx.c
 SRC+= src/main.c
 SRC+= src/stm32f4xx_it.c
-# SRC+= src/audio_sample.c
 SRC+= src/usb_bsp.c
 SRC+= src/usbh_usr.c
 
