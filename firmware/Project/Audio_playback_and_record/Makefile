@@ -12,13 +12,15 @@ DEF+=STM32F4XX
 DEF+=USE_STDPERIPH_DRIVER
 DEF+=USE_USB_OTG_FS
 DEF+=MEDIA_USB_KEY
-DEF+=__FPU_PRESENT=0
+DEF+=__FPU_PRESENT=1
 LIBRARY= /Users/mac/git/portable-music-player/firmware/
 
 PERIPH_DRIVER= $(LIBRARY)/Libraries/STM32F4xx_StdPeriph_Driver
 USB_OTG_DRIVER= $(LIBRARY)/Libraries/STM32_USB_OTG_Driver
 FAT_FS_DRIVER= $(LIBRARY)/Utilities/Third_Party/fat_fs
+Free_RTOS_DIR= $(LIBRARY)/Utilities/Third_Party/FreeRTOS
 USB_HOST_LIBRARY= $(LIBRARY)/Libraries/STM32_USB_HOST_Library
+
 INC+= $(USB_OTG_DRIVER)/inc
 INC+= inc
 INC+= $(LIBRARY)/Libraries/CMSIS/Include
@@ -29,6 +31,8 @@ INC+= $(LIBRARY)/Utilities/STM32F4-Discovery
 INC+= $(FAT_FS_DRIVER)/inc
 INC+= $(USB_HOST_LIBRARY)/Core/inc
 INC+= $(USB_HOST_LIBRARY)/Class/MSC/inc
+INC+= $(Free_RTOS_DIR)/Source/include
+INC+= $(Free_RTOS_DIR)/Source/portable/GCC/ARM_CM4F/
 
 SRC+= src/system_stm32f4xx.c
 SRC+= src/main.c
@@ -78,6 +82,14 @@ SRC+= $(USB_OTG_DRIVER)/src/usb_core.c
 SRC+= $(USB_OTG_DRIVER)/src/usb_hcd_int.c
 SRC+= $(USB_OTG_DRIVER)/src/usb_hcd.c
 
+# FreeRTOS
+SRC+= $(Free_RTOS_DIR)/Source/tasks.c
+SRC+= $(Free_RTOS_DIR)/Source/timers.c
+SRC+= $(Free_RTOS_DIR)/Source/queue.c 
+SRC+= $(Free_RTOS_DIR)/Source/list.c 
+SRC+= $(Free_RTOS_DIR)/Source/portable/MemMang/heap_2.c 
+SRC+= $(Free_RTOS_DIR)/Source/portable/GCC/ARM_CM4F/port.c
+
 STARTUP= $(LIBRARY)/Libraries/CMSIS/ST/STM32F4xx/Source/Templates/TrueSTUDIO/startup_stm32f4xx.s
 LINKER= -TTrueSTUDIO/MEDIA_USB_KEY/stm32_flash.ld
 INCLUDE= $(patsubst %,-I%,$(INC))
@@ -93,6 +105,7 @@ OBJECTS = $(addprefix $(OUTPUT)/, $(OBJS))
 CFLAGS+=$(INCLUDE)
 CFLAGS+=$(DEFINE)
 CFLAGS+=-g
+CFLAGS+=-mfpu=fpv4-sp-d16 -mfloat-abi=softfp
 CFLAGS+=-fno-builtin
 CFLAGS+=-mcpu=cortex-m4 -mthumb
 CFLAGS+=-MD
@@ -108,7 +121,7 @@ ASFLAGS+=-g
 ASFLAGS+=-mcpu=cortex-m4 -mthumb
 $(OUTPUT)/%.o: %.s Makefile
 	@mkdir -p $(@D)
-	@$(AS) $(ASFLAGS) -mthumb $< -o $@
+	@$(AS) $(ASFLAGS) $< -o $@
 	@echo "AS ${@}"
 $(OUTPUT)/%.o: %.c Makefile
 	@mkdir -p $(@D)

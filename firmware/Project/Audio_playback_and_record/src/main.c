@@ -156,6 +156,26 @@ static void TIM_LED_Config(void)
   TIM_Cmd(TIM4, ENABLE);
 }
 
+
+void vApplicationTickHook( void )
+{
+}
+
+void vApplicationStackOverflowHook ( void)
+{
+
+}
+
+void vApplicationIdleHook (void)
+{
+
+}
+
+void vApplicationMallocFailedHook (void)
+{
+
+}
+
 #ifdef  USE_FULL_ASSERT
 
 /**

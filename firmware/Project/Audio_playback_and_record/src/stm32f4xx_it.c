@@ -122,9 +122,9 @@ void UsageFault_Handler(void)
   * @param  None
   * @retval None
   */
-void SVC_Handler(void)
-{
-}
+// void SVC_Handler(void)
+// {
+// }
 
 /**
   * @brief  This function handles Debug Monitor exception.
@@ -140,25 +140,25 @@ void DebugMon_Handler(void)
   * @param  None
   * @retval None
   */
-void PendSV_Handler(void)
-{
-}
+// void PendSV_Handler(void)
+// {
+// }
 
 /**
   * @brief  This function handles SysTick Handler.
   * @param  None
   * @retval None
   */
-void SysTick_Handler(void)
-{
-  TimingDelay_Decrement();
-#if defined MEDIA_USB_KEY
-  if ( Command_index == 1)
-  {
-    Time_Rec_Base ++;
-  }
-#endif
-}
+// void SysTick_Handler(void)
+// {
+//   TimingDelay_Decrement();
+// #if defined MEDIA_USB_KEY
+//   if ( Command_index == 1)
+//   {
+//     Time_Rec_Base ++;
+//   }
+// #endif
+// }
 
 
 /******************************************************************************/
