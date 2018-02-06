@@ -104,10 +104,11 @@ OBJS+=$(patsubst %.s,%.o,$(STARTUP))
 OBJECTS = $(addprefix $(OUTPUT)/, $(OBJS))
 CFLAGS+=$(INCLUDE)
 CFLAGS+=$(DEFINE)
+CPUFLAGS=-mcpu=cortex-m4 -mthumb
 CFLAGS+=-g
 CFLAGS+=-mfpu=fpv4-sp-d16 -mfloat-abi=softfp
 CFLAGS+=-fno-builtin
-CFLAGS+=-mcpu=cortex-m4 -mthumb
+CFLAGS+=$(CPUFLAGS)
 CFLAGS+=-MD
 LDFLAGS+= -L $(LIBRARY)/Utilities/STM32F4-Discovery/
 LDFLAGS+= -lPDMFilter_GCC
@@ -118,7 +119,7 @@ LDFLAGS+=-lc
 LDFLAGS+=--specs=nano.specs
 LDFLAGS+=--specs=nosys.specs
 ASFLAGS+=-g
-ASFLAGS+=-mcpu=cortex-m4 -mthumb
+ASFLAGS+=$(CPUFLAGS)
 $(OUTPUT)/%.o: %.s Makefile
 	@mkdir -p $(@D)
 	@$(AS) $(ASFLAGS) $< -o $@

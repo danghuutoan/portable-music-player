@@ -22,6 +22,10 @@
 #include "main.h"
 #include "usart.h"
 #include <stdio.h>
+
+/* Scheduler includes. */
+#include "FreeRTOS.h"
+#include "task.h"
 /** @addtogroup STM32F4-Discovery_Audio_Player_Recorder
   * @{
   */ 
@@ -41,6 +45,7 @@ extern __IO uint8_t LED_Toggle;
 
 /* Private function prototypes -----------------------------------------------*/
 static void TIM_LED_Config(void);
+static void vMainTask( void *pvParameters );
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -49,54 +54,35 @@ static void TIM_LED_Config(void);
   * @retval None
 */
 int main(void)
-{ 
-  /* Initialize LEDS */
-  STM_EVAL_LEDInit(LED3);
-  STM_EVAL_LEDInit(LED4);
-  STM_EVAL_LEDInit(LED5);
-  STM_EVAL_LEDInit(LED6);
- 
-  /* Green Led On: start of application */
-  STM_EVAL_LEDOn(LED4);
-       
-  /* SysTick end of count event each 10ms */
-  RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
-  
-  /* Configure TIM4 Peripheral to manage LEDs lighting */
-  TIM_LED_Config();
-  // InitFifo();
-  USART_Config();
+{
+	USART_Config();
+	printf("SStarted Music Player\n");
 
-  USART_write_byte('A');
-  printf("hellloe\n");
-  /* Initialize the repeat status */
-  RepeatState = 0;
-  LED_Toggle = 7;
-  
-#if defined MEDIA_IntFLASH
-  
-  WavePlayBack(I2S_AudioFreq_48k); 
-  while (1);
-  
-#elif defined MEDIA_USB_KEY
-  
-  /* Initialize User Button */
-  STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
-   
-  /* Init Host Library */
-  USBH_Init(&USB_OTG_Core, USB_OTG_FS_CORE_ID, &USB_Host, &USBH_MSC_cb, &USR_Callbacks);
-  
-  while (1)
-  {
-    /* Host Task handler */
-    USBH_Process(&USB_OTG_Core, &USB_Host);
-  }
-  
-#endif
-  
+
+	/* Start the check task - which is defined in this file. */
+	xTaskCreate( vMainTask, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+
+	/* Now all the tasks have been started - start the scheduler.
+
+	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
+	The processor MUST be in supervisor mode when vTaskStartScheduler is
+	called.  The demo applications included in the FreeRTOS.org download switch
+	to supervisor mode prior to main being called.  If you are not using one of
+	these demo application projects then ensure Supervisor mode is used here. */
+	vTaskStartScheduler();
+
+	/* Should never reach here! */
+  return 0;  
 }
 
+static void vMainTask( void *pvParameters ) {
+	( void ) pvParameters;
+	for( ;; )
+	{
+		printf("hello\r\n");
+		vTaskDelay( 1000 );
+	}
+}
 /**
   * @brief  Configures the TIM Peripheral for Led toggling.
   * @param  None
@@ -148,7 +134,7 @@ static void TIM_LED_Config(void)
   /* Output Compare PWM1 Mode configuration: Channel2 */
   TIM_OC1Init(TIM4, &TIM_OCInitStructure);
   TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Disable);
-    
+	
   /* TIM Interrupts enable */
   TIM_ITConfig(TIM4, TIM_IT_CC1 , ENABLE);
   
@@ -188,7 +174,7 @@ void vApplicationMallocFailedHook (void)
 void assert_failed(uint8_t* file, uint32_t line)
 { 
   /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+	 ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
   /* Infinite loop */
   while (1)
