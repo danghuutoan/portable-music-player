@@ -46,6 +46,7 @@ extern __IO uint8_t LED_Toggle;
 /* Private function prototypes -----------------------------------------------*/
 static void TIM_LED_Config(void);
 static void vMainTask( void *pvParameters );
+static void vBackGroundTask( void *pvParameters );
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -60,8 +61,8 @@ int main(void)
 
 
 	/* Start the check task - which is defined in this file. */
-	xTaskCreate( vMainTask, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-
+	xTaskCreate( vMainTask, "Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBackGroundTask, "vBackGroundTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	/* Now all the tasks have been started - start the scheduler.
 
 	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
@@ -79,10 +80,20 @@ static void vMainTask( void *pvParameters ) {
 	( void ) pvParameters;
 	for( ;; )
 	{
-		printf("hello\r\n");
+		printf("vMainTask\r\n");
 		vTaskDelay( 1000 );
 	}
 }
+
+static void vBackGroundTask( void *pvParameters ) {
+	( void ) pvParameters;
+	for( ;; )
+	{
+		printf("vBackGroundTask\r\n");
+		vTaskDelay( 1000 );
+	}
+}
+
 /**
   * @brief  Configures the TIM Peripheral for Led toggling.
   * @param  None
